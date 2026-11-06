@@ -1,0 +1,23 @@
+# Pocket Chat — private chat for your household on your own server (Go + SQLite). One container, one volume.
+services:
+  pocket-chat:
+    image: ghcr.io/abjelosevic88/pocket-homelab-chat:latest
+    container_name: pocket-chat
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: ${TZ:-Europe/Berlin}
+      BASE_URL: ${BASE_URL:-http://localhost:8080}
+      # SECURE_COOKIES: "true"          # behind HTTPS
+      # First admin (only used while the database has no users):
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      NOTIFY_URL: ${NOTIFY_URL:-}
+      # Pocket Core: one sign-in, Pocket AI, and Tasks/Calendar/Notes/Split/Places… through app links.
+      # CORE_URL: http://pocket-core:8080
+      # CORE_REGISTRATION_KEY: ${CORE_REGISTRATION_KEY}
+    volumes:
+      - ./data:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

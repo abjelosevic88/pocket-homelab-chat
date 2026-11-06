@@ -1,0 +1,9 @@
+# Pocket Chat behind Caddy. flush_interval -1 keeps the live stream (Server-Sent Events) flowing.
+chat.example.com {
+	request_body {
+		max_size 60MB
+	}
+	reverse_proxy pocket-chat:8080 {
+		flush_interval -1
+	}
+}

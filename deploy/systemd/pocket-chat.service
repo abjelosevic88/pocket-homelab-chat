@@ -1,0 +1,23 @@
+[Unit]
+Description=Pocket Chat — private chat for your household on your own server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pocket-chat
+Group=pocket-chat
+ExecStart=/usr/local/bin/pocket-chat
+Environment=DATA_DIR=/var/lib/pocket-chat
+Environment=PORT=8080
+Environment=BASE_URL=https://chat.example.com
+Environment=SECURE_COOKIES=true
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/pocket-chat
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
