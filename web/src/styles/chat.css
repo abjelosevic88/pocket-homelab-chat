@@ -474,7 +474,7 @@ b.ellipsis, span.ellipsis { display: block; }
 .up-spin { position: absolute; inset: 0; margin: auto; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--accent-soft); border-top-color: var(--accent); animation: spin .8s linear infinite; }
 .up-x { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, .55); color: #fff; display: grid; place-items: center; cursor: pointer; padding: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.mention-pop { position: absolute; left: 14px; bottom: calc(100% + 4px); width: min(320px, calc(100% - 28px)); background: var(--raised); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 4px; z-index: 30; }
+.mention-pop { position: absolute; left: 14px; bottom: calc(100% + 4px); width: min(320px, calc(100% - 70px)); background: var(--raised); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 4px; z-index: 30; }
 .mention-opt { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 8px; border: 0; border-radius: 8px; background: none; font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; color: var(--text); }
 .mention-opt .muted { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 45%; }
 .mention-opt.hl, .mention-opt:hover { background: var(--hover); }

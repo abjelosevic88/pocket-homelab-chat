@@ -202,7 +202,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ co
           </div>
         ))}
       </div>}
-      {mention && candidates.length > 0 && <div className="mention-pop" role="listbox">
+      {mention && candidates.length > 0 && <div className="mention-pop" role="listbox" style={ta.current ? { left: ta.current.offsetLeft } : undefined}>
         {candidates.map((c, i) => (
           <button key={c.key} type="button" role="option" aria-selected={i === mention.i % candidates.length} className={`mention-opt ${i === mention.i % candidates.length ? 'hl' : ''}`} onMouseDown={e => { e.preventDefault(); pickMention(c.insert) }}>
             {c.key === 'all' ? <span className="ai-ava sm app"><Icon name="users" size={12} /></span> : <Avatar name={c.label} email={c.hint} size={22} />}
