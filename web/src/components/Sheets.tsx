@@ -113,7 +113,7 @@ export function MakeSheet({ m, target, prefill, onClose, onMade }: { m: Message;
             </div>
           </>}
           {target !== 'expense' && <Field label={target === 'note' ? 'The note' : 'Notes (optional)'} help={target === 'note' ? undefined : 'Who said it and where is added by itself, with a link back.'}>
-            <textarea rows={target === 'note' ? 6 : 2} value={f.notes || ''} onChange={e => set('notes', e.target.value)} />
+            <textarea data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" rows={target === 'note' ? 6 : 2} value={f.notes || ''} onChange={e => set('notes', e.target.value)} />
           </Field>}
         </form>
       )}
@@ -149,7 +149,7 @@ export function ShareSheet({ conv, onClose, onShared }: { conv: Conversation; on
       {pick ? (
         <div className="stack">
           <div className="share-preview"><span className="share-ico">{pick.card.icon}</span><div><b>{pick.title}</b>{pick.subtitle && <div className="muted small">{pick.subtitle}</div>}</div></div>
-          <Field label="Add a few words (optional)"><textarea rows={2} value={text} onChange={e => setText(e.target.value)} autoFocus placeholder="Let's do this on Sunday?" /></Field>
+          <Field label="Add a few words (optional)"><textarea data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" rows={2} value={text} onChange={e => setText(e.target.value)} autoFocus placeholder="Let's do this on Sunday?" /></Field>
           <p className="muted small">Everyone in this conversation sees the card as it is now. The link back to {appName(app?.slug)} opens only for you.</p>
         </div>
       ) : !app ? (

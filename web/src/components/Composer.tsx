@@ -222,7 +222,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ co
           <button type="button" className="btn ghost icon-only" aria-label="Add" title="Photo, file, share from your apps, poll, to-do list" onClick={e => setPlus(plus ? null : rectOf(e.currentTarget))}><Icon name="plus" size={20} /></button>
           {plus && <Menu anchor={plus} items={plusItems} onClose={() => setPlus(null)} width={230} />}
           <input ref={fileIn} type="file" multiple hidden onChange={e => { addFiles(Array.from(e.target.files || [])); e.target.value = '' }} />
-          <textarea ref={ta} rows={1} value={text} onChange={e => change(e.target.value)} onKeyDown={key} onPaste={paste} onBlur={() => window.setTimeout(() => setMention(null), 150)}
+          <textarea data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" ref={ta} rows={1} value={text} onChange={e => change(e.target.value)} onKeyDown={key} onPaste={paste} onBlur={() => window.setTimeout(() => setMention(null), 150)}
             placeholder={editing ? 'Change your message' : conv.kind === 'self' ? 'A note to yourself…' : mobile ? 'Message' : `Message ${conv.name}`} aria-label="Message" />
           {!editing && conv.kind !== 'self' && !text && <button type="button" className="btn ghost icon-only" aria-label="Reply ideas" title="Reply ideas from Pocket AI" onClick={getIdeas} disabled={ideasBusy}><Icon name="sparkles" size={18} className={ideasBusy ? 'pulse' : ''} /></button>}
           {text.trim() || ready.length || editing ? (

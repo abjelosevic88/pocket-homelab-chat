@@ -120,7 +120,7 @@ export function InfoPanel({ conv, onClose, onJump, embedded = false }: { conv: C
         <div className="stack">
           <div className="newgroup-head"><Field label="Emoji"><input value={f.emoji} onChange={e => setF({ ...f, emoji: e.target.value })} maxLength={8} style={{ width: 70, fontSize: 20, textAlign: 'center' }} /></Field>
             <Field label="Name" className="grow"><input value={f.title} onChange={e => setF({ ...f, title: e.target.value })} maxLength={80} /></Field></div>
-          <Field label="What it is for"><textarea rows={2} value={f.about} onChange={e => setF({ ...f, about: e.target.value })} maxLength={500} /></Field>
+          <Field label="What it is for"><textarea data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" rows={2} value={f.about} onChange={e => setF({ ...f, about: e.target.value })} maxLength={500} /></Field>
         </div>
       </Modal>}
       {confirm === 'leave' && <Confirm title={conv.kind === 'group' ? `Leave ${conv.name}?` : 'Hide this chat?'} confirmLabel={conv.kind === 'group' ? 'Leave' : 'Hide'}
