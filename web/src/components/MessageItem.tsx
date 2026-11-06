@@ -225,7 +225,7 @@ export const MessageItem = memo(function MessageItem({ m, prev, conv, act, peopl
   const big = m.kind === 'text' && !m.attachments.length && !m.reply && onlyEmoji(m.body)
   const card = m.data.card
   const canEdit = mine && !m.deleted && ['text', 'card', 'app'].includes(m.kind) && !m.source
-  const canDelete = !m.deleted && (mine || conv.role === 'owner')
+  const canDelete = !m.deleted && (mine || conv.role === 'owner' || conv.kind === 'self')
   const text = m.body || (m.kind === 'voice' ? m.data.text || '' : '')
 
   const items = (): MenuItem[] => [
@@ -240,7 +240,7 @@ export const MessageItem = memo(function MessageItem({ m, prev, conv, act, peopl
     { label: 'Make…', icon: 'sparkles', submenu: (Object.keys(MAKE) as MakeTarget[]).map(t => ({ label: MAKE[t].verb, icon: MAKE[t].icon, onSelect: () => act.make(m, t) })) },
     ...(canEdit || canDelete ? ['sep' as const] : []),
     ...(canEdit ? [{ label: 'Edit', icon: 'edit', onSelect: () => act.edit(m) }] : []),
-    ...(canDelete ? [{ label: mine ? 'Delete for everyone' : 'Delete (you own the group)', icon: 'trash', danger: true, onSelect: () => act.remove(m) }] : []),
+    ...(canDelete ? [{ label: conv.kind === 'self' ? 'Delete' : mine ? 'Delete for everyone' : 'Delete (you own the group)', icon: 'trash', danger: true, onSelect: () => act.remove(m) }] : []),
   ]
   const openMenu = (e: React.MouseEvent) => { if (e.shiftKey || m.deleted || m.pending) return; e.preventDefault(); setMenu({ x: e.clientX, y: e.clientY, w: 0, h: 0 }) }
   const touchStart = (e: React.TouchEvent) => {

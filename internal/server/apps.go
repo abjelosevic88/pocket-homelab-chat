@@ -243,9 +243,10 @@ func (s *Server) shareList(ctx context.Context, sib *siblingConn, a pocketApp, q
 			add(idOf(m), firstNonEmpty(str(m, "title"), "Event"), sub, day10(start), map[string]any{"kind": "event", "icon": "📅", "text": clip(str(m, "description"), 600),
 				"url": link("/event/" + idOf(m)), "date": start,
 				"fields": map[string]any{"title": str(m, "title"), "start": start, "end": end, "all_day": allDay, "location": str(m, "location")}})
-			if len(items) >= 60 {
-				break
-			}
+		}
+		sort.SliceStable(items, func(i, j int) bool { return str(items[i].Card, "date") < str(items[j].Card, "date") })
+		if len(items) > 60 {
+			items = items[:60]
 		}
 	case "notes":
 		path := "/api/v1/notes"

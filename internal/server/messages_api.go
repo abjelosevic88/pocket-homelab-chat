@@ -397,6 +397,9 @@ func (s *Server) handleDeleteMessage(w http.ResponseWriter, r *http.Request) {
 	}
 	if m.UserID != me.ID {
 		role, _ := s.store.Role(ctx, me.ID, m.ConversationID)
+		if c, err := s.store.GetConversation(ctx, me.ID, m.ConversationID); err == nil && c.Kind == store.KindSelf {
+			role = "owner" // your own space is all yours
+		}
 		if role != "owner" {
 			writeErr(w, http.StatusForbidden, "you can delete only your own messages")
 			return
