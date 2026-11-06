@@ -11,7 +11,7 @@ export type Settings = ConnFields & {
   core_configured: boolean
   core_registered?: boolean
   title: string; date_format: string; time_format: string; week_start: number
-  enter_sends: boolean; smart_actions: boolean; link_previews: boolean; read_receipts: boolean; ai_apps: boolean; language: string
+  enter_sends: boolean; smart_actions: boolean; link_previews: boolean; read_receipts: boolean; language: string
   notify_mode: 'all' | 'mentions' | 'off'; notify_preview: boolean; quiet_from: number; quiet_to: number; notify_digest: boolean; notify_hour: number
   notify_url: string; notify_format: string; notify_configured: boolean
   ai_provider: 'auto' | 'pocket' | 'openai'; ai_pocket_model: string; openai_api_key: string; openai_model: string; openai_base_url: string

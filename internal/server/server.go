@@ -207,7 +207,7 @@ var eventTopics = []string{"chat.message_sent", "chat.mentioned"}
 func (s *Server) registerWithCore(ctx context.Context) error {
 	m := core.Manifest{
 		Slug: "chat", Name: "Pocket Chat",
-		Description: "Private chat for your household and friends on your own server: one-to-one, groups and your own space. Share anything from your Pocket apps as a card (an event, a recipe, a place, a trip, a delivery), turn a message into a task, a calendar event, a note, a split cost or a wish in one tap, ask Pocket AI in the conversation with @ai (it can look at your calendar, tasks, weather and meal plan when you ask), catch up on what you missed with a summary, vote in polls, tick shared to-do lists, and send voice messages that Pocket Voice writes out on this server.",
+		Description: "Private chat for your household and friends on your own server: one-to-one, groups and your own space. Share anything from your Pocket apps as a card (an event, a recipe, a place, a trip, a delivery), turn a message into a task, a calendar event, a note, a split cost or a wish in one tap, catch up on what you missed with a summary only you see, vote in polls, tick shared to-do lists, and send voice messages that Pocket Voice writes out on this server.",
 		Icon:        "/favicon.svg", Version: Version,
 		URL: s.cfg.CoreAppURL, PublicURL: s.cfg.BaseURL, HealthPath: "/healthz", EnvPrefix: "CHAT",
 		Publishes: eventTopics,

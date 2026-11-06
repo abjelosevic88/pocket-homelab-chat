@@ -297,8 +297,7 @@ function Chat({ conv }: { conv: Conv }) {
             {msgs === null ? <Loading /> : <>
               {older ? <div className="chat-older">{loadingOlder ? <Loading label="Older messages…" /> : <button type="button" className="btn ghost sm" onClick={loadOlder}>Older messages</button>}</div>
                 : <div className="chat-start"><ConvAvatar c={conv} size={56} /><h3>{conv.name}</h3>
-                  <p className="muted small">{conv.kind === 'self' ? 'Your own space: notes to yourself, links, photos and things to file later. Write “ai …” to ask Pocket AI.' : conv.kind === 'direct' ? `The start of your chat with ${conv.name}.` : conv.about || `A group of ${conv.members.length}.`}</p>
-                  {conv.ai && conv.kind !== 'self' && <p className="muted small">Write <b>@ai</b> to ask Pocket AI here — everyone sees the answer.</p>}</div>}
+                  <p className="muted small">{conv.kind === 'self' ? 'Your own space: notes to yourself, links, photos and things to file later.' : conv.kind === 'direct' ? `The start of your chat with ${conv.name}.` : conv.about || `A group of ${conv.members.length}.`}</p></div>}
               {catchup && <div className="catchup-card">
                 <div className="row"><Icon name="sparkles" size={15} /><b className="grow">{catchup.unread ? `What you missed (${catchup.count})` : 'Lately'}</b>
                   <button type="button" className="btn ghost xs" onClick={keepCatchup} title="Keep it in Pocket Notes"><Icon name="note" size={13} />Keep</button>

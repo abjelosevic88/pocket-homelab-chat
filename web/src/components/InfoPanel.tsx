@@ -72,7 +72,7 @@ export function InfoPanel({ conv, onClose, onJump, embedded = false }: { conv: C
           <h4>This conversation</h4>
           <div className="info-row"><span className="grow">Pin to the top</span><Switch checked={conv.pinned} onChange={v => mine({ pinned: v })} label="Pin" /></div>
           <div className="info-row"><span className="grow">Archive<span className="muted small block-line">Out of the list until you open it; new messages still arrive.</span></span><Switch checked={conv.archived} onChange={v => mine({ archived: v })} label="Archive" /></div>
-          <div className="info-row"><span className="grow">Pocket AI here<span className="muted small block-line">{conv.kind === 'self' ? 'Write “ai …” or @ai to ask.' : 'Anyone can write @ai to ask; everyone sees the answer.'}</span></span><Switch checked={conv.ai} onChange={v => update({ ai: v })} label="Pocket AI" /></div>
+          <div className="info-row"><span className="grow">Pocket AI helpers<span className="muted small block-line">Catch-up summaries and reply ideas, only for whoever asks. Pocket AI never writes here.</span></span><Switch checked={conv.ai} onChange={v => update({ ai: v })} label="Pocket AI" /></div>
           <div className="info-row"><span className="grow">Suggestions<span className="muted small block-line">“Add to calendar”, “Split” and “Make a task” under messages.</span></span><Switch checked={conv.smart} onChange={v => update({ smart: v })} label="Suggestions" /></div>
         </section>
 

@@ -256,7 +256,7 @@ func (s *Server) handleUpdateConversation(w http.ResponseWriter, r *http.Request
 		c.AI = *in.AI
 		if c.Kind != store.KindSelf {
 			if c.AI {
-				lines = append(lines, me.Name+" let Pocket AI answer here when someone writes @ai")
+				lines = append(lines, me.Name+" switched Pocket AI helpers on here (catch-up summaries, reply ideas)")
 			} else {
 				lines = append(lines, me.Name+" switched Pocket AI off in this conversation")
 			}

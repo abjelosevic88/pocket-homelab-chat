@@ -21,11 +21,11 @@ Environment variables; every one has a default. Personal settings (chatting, not
 | `OPENAI_API_KEY`, `OPENAI_MODEL`, `OPENAI_BASE_URL` | – | AI without Pocket AI (any OpenAI-compatible API: Ollama, LM Studio, OpenRouter…) |
 | `CORE_URL`, `CORE_REGISTRATION_KEY`, `CORE_APP_URL` | – | Pocket Core |
 | `TRUST_PROXY`, `METRICS_ENABLED`, `LOG_LEVEL`, `LOG_FORMAT` | `true`, `true`, `info`, `text` | |
-| `DEMO_DATA` | `false` | Seed a family that chats (groups, a poll, a to-do list, cards from the apps, Pocket AI) into the owner account |
+| `DEMO_DATA` | `false` | Seed a family that chats (groups, a poll, a to-do list, cards from the apps) into the owner account |
 
 Commands: `pocket-chat backup [-o FILE]`, `pocket-chat reset-password [-email] [-password]`, `pocket-chat version`.
 
-Connections to Pocket Tasks, Calendar, Notes, Split, Wishlist, Places, Voice, Kitchen, Travel, Parcels, Weather, Bookshelf and Watch are made per person under Settings → Connected apps: through Pocket Core (nothing to paste) or directly with the app's URL and an API token. They are used only when that person shares something, makes something from a message or asks @ai.
+Connections to Pocket Tasks, Calendar, Notes, Split, Wishlist, Places, Voice, Kitchen, Travel, Parcels, Weather, Bookshelf and Watch are made per person under Settings → Connected apps: through Pocket Core (nothing to paste) or directly with the app's URL and an API token. They are used only when that person shares something or makes something from a message.
 
 ## Live updates
 

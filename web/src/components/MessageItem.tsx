@@ -46,7 +46,7 @@ function Inline({ text, people }: { text: string; people?: Map<string, number> }
     switch (p.t) {
       case 'link': return <a key={i} href={p.v} target="_blank" rel="noreferrer noopener">{p.v.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60)}{p.v.length > 70 ? '…' : ''}</a>
       case 'mention': {
-        const known = people?.has(p.v.slice(1).toLowerCase()) || p.v.toLowerCase() === '@ai'
+        const known = people?.has(p.v.slice(1).toLowerCase())
         return <span key={i} className={known ? 'mention' : ''}>{p.v}</span>
       }
       case 'bold': return <b key={i}>{p.v}</b>

@@ -207,9 +207,9 @@ func (s *Server) send(ctx context.Context, me *store.User, cid int64, in sendInp
 			m.ReplyTo = 0
 		}
 	}
-	m.Mentions = mentionsIn(m.Body, conv.Members, me.ID, conv.AI)
+	m.Mentions = mentionsIn(m.Body, conv.Members, me.ID)
 	st, _ := s.store.GetSettings(ctx, me.ID)
-	if conv.Smart && m.Body != "" && !askedAI(m.Mentions) {
+	if conv.Smart && m.Body != "" {
 		if hints := detectHints(m.Body, time.Now()); len(hints) > 0 {
 			m.Data["hints"] = hints
 		}
@@ -244,9 +244,9 @@ func (s *Server) send(ctx context.Context, me *store.User, cid int64, in sendInp
 
 var mentionRe = regexp.MustCompile(`(?i)(^|[^\p{L}\p{N}_])@([\p{L}\p{N}_.-]+)`)
 
-// mentionsIn finds who a message names: @ai, @all / @everyone, and members
+// mentionsIn finds who a message names: @all / @everyone, and members
 // by their first name or their whole name without spaces.
-func mentionsIn(text string, members []store.Member, me int64, aiOn bool) []string {
+func mentionsIn(text string, members []store.Member, me int64) []string {
 	if !strings.Contains(text, "@") {
 		return nil
 	}
@@ -262,11 +262,6 @@ func mentionsIn(text string, members []store.Member, me int64, aiOn bool) []stri
 	for _, mm := range mentionRe.FindAllStringSubmatch(lower, -1) {
 		w := strings.TrimRight(mm[2], ".-")
 		switch w {
-		case "ai", "pocketai":
-			if aiOn {
-				add("ai")
-			}
-			continue
 		case "all", "everyone", "svi", "sve":
 			for _, m := range members {
 				if m.UserID != me {
@@ -305,18 +300,6 @@ func (s *Server) afterSend(ctx context.Context, conv *store.Conversation, m *sto
 		s.transcribe(ctx, me.ID, m)
 	}
 	s.notifyMembers(ctx, conv, m, me)
-	asked := false
-	for _, v := range m.Mentions {
-		if v == "ai" {
-			asked = true
-		}
-	}
-	if conv.Kind == store.KindSelf && conv.AI && strings.HasPrefix(strings.ToLower(m.Body), "ai ") {
-		asked = true
-	}
-	if asked && conv.AI {
-		s.answerAI(ctx, conv, m, me)
-	}
 	if st.LinkPreviews && m.Kind == store.MsgText {
 		s.previewLinks(ctx, m)
 	}
@@ -356,7 +339,7 @@ func (s *Server) handleEditMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	m.Body = text
-	m.Mentions = mentionsIn(text, conv.Members, me.ID, conv.AI)
+	m.Mentions = mentionsIn(text, conv.Members, me.ID)
 	delete(m.Data, "hints")
 	delete(m.Data, "preview")
 	if conv.Smart {
@@ -920,14 +903,4 @@ func cleanCard(in map[string]any) map[string]any {
 		out["fields"] = clean
 	}
 	return out
-}
-
-// askedAI: a question to Pocket AI gets no "add to calendar" under it.
-func askedAI(mentions []string) bool {
-	for _, v := range mentions {
-		if v == "ai" {
-			return true
-		}
-	}
-	return false
 }

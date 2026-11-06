@@ -35,7 +35,7 @@ func (s *Server) publicSettings(ctx context.Context, u *store.User, st store.Set
 	out := map[string]any{
 		"core_configured": s.core.Configured(), "core_registered": s.coreStatus()["registered"],
 		"title": st.Title, "date_format": st.DateFormat, "time_format": st.TimeFormat, "week_start": st.WeekStart,
-		"enter_sends": st.EnterSends, "smart_actions": st.SmartActions, "link_previews": st.LinkPreviews, "read_receipts": st.ReadReceipts, "ai_apps": st.AIApps, "language": st.Language,
+		"enter_sends": st.EnterSends, "smart_actions": st.SmartActions, "link_previews": st.LinkPreviews, "read_receipts": st.ReadReceipts, "language": st.Language,
 		"notify_mode": st.NotifyMode, "notify_preview": st.NotifyPreview, "quiet_from": st.QuietFrom, "quiet_to": st.QuietTo, "notify_digest": st.NotifyDigest, "notify_hour": st.NotifyHour,
 		"notify_url": st.NotifyURL, "notify_format": st.NotifyFormat, "notify_configured": st.NotifyURL != "",
 		"ai_provider": st.AIProvider, "ai_pocket_model": st.AIPocketModel, "openai_api_key": mask(st.OpenAIKey), "openai_model": st.OpenAIModel, "openai_base_url": st.OpenAIBaseURL,
@@ -128,7 +128,6 @@ func (s *Server) handlePutSettings(w http.ResponseWriter, r *http.Request) {
 	boolIn("smart_actions", &cur.SmartActions, in.SmartActions)
 	boolIn("link_previews", &cur.LinkPreviews, in.LinkPreviews)
 	boolIn("read_receipts", &cur.ReadReceipts, in.ReadReceipts)
-	boolIn("ai_apps", &cur.AIApps, in.AIApps)
 	if keys["language"] {
 		cur.Language = clip(strings.TrimSpace(in.Language), 40)
 	}

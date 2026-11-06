@@ -189,7 +189,6 @@ type Settings struct {
 	SmartActions bool   `json:"smart_actions"` // "add to calendar", "split this"… under messages
 	LinkPreviews bool   `json:"link_previews"` // show a preview of web links
 	ReadReceipts bool   `json:"read_receipts"` // others see when you have read
-	AIApps       bool   `json:"ai_apps"`       // @ai may look in your apps when you ask it something
 	Language     string `json:"language"`      // for translations and AI answers ("" = as written)
 
 	// Notifications.

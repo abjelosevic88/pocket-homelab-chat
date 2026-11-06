@@ -118,8 +118,7 @@ func (s *Server) seedDemo(ctx context.Context, uid int64) error {
 			{who: "luka", minsAgo: 3*day + 65, text: "Želja, obviously"},
 			{who: "ana", minsAgo: 2*day + 500, text: "Can you pick up bread and milk on the way home tomorrow?", reply: 0},
 			{who: "owner", minsAgo: 2*day + 490, text: "Sure 👍", reply: 13},
-			{who: "owner", minsAgo: 2*day + 100, text: "@ai what's the weather like for Saturday? We want to eat outside"},
-			{who: "ai", minsAgo: 2*day + 99, text: "Saturday looks good for eating outside: **sunny, 9–17 °C** in Sarajevo, light wind and almost no chance of rain. It cools down quickly after 18:00, so take a jacket if you stay late. 🌤️", data: map[string]any{"used": []any{"Pocket Weather"}}},
+			{who: "owner", minsAgo: 2*day + 100, text: "Saturday looks sunny, let's eat outside 🌤️"},
 			{who: "ana", minsAgo: 300, text: "Dinner at Kod Muje on Friday at 8? My treat for Mila's good grades 🎉"},
 			{who: "mila", minsAgo: 250, text: "YES"},
 			{who: "luka", minsAgo: 40, text: "@" + "ana can I bring Emir to the cottage on the weekend?"},
@@ -168,22 +167,14 @@ func (s *Server) seedDemo(ctx context.Context, uid int64) error {
 			if _, ok := m.Data["card"]; ok && m.Kind == store.MsgText {
 				m.Kind = store.MsgCard
 			}
-			if dm.who == "ai" {
-				m.Kind, m.AuthorName = store.MsgAI, "Pocket AI"
-				m.Data["asked_by"] = uid
-				if len(ids) > 0 {
-					m.ReplyTo = ids[len(ids)-1]
-				}
-			} else {
-				m.UserID = people[dm.who]
-			}
+			m.UserID = people[dm.who]
 			if dm.reply > 0 && dm.reply <= len(ids) {
 				m.ReplyTo = ids[dm.reply-1]
 			}
 			if conv, err := s.store.GetConversation(ctx, uid, c.id); err == nil {
 				body := m.Body
-				m.Mentions = mentionsIn(body, conv.Members, m.UserID, true)
-				if body != "" && m.Kind != store.MsgAI && !askedAI(m.Mentions) {
+				m.Mentions = mentionsIn(body, conv.Members, m.UserID)
+				if body != "" {
 					if hints := detectHints(body, at); len(hints) > 0 {
 						m.Data["hints"] = hints
 					}

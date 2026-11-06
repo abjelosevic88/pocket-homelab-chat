@@ -36,7 +36,7 @@ JSON over `/api/v1`, with a session cookie or `Authorization: Bearer <token>` (S
 
 ## AI
 
-`GET /conversations/{id}/catchup`, `GET /catchup` (everything unread) → `{summary, for_you, plans, count, unread}`; `POST /conversations/{id}/replies` → `{replies}`; `POST /conversations/{id}/note` `{title, content}` keeps text in Pocket Notes. Writing `@ai` in a message makes Pocket AI answer in the conversation.
+`GET /conversations/{id}/catchup`, `GET /catchup` (everything unread) → `{summary, for_you, plans, count, unread}`; `POST /conversations/{id}/replies` → `{replies}`; `POST /conversations/{id}/note` `{title, content}` keeps text in Pocket Notes. These answer only the person who asks; Pocket AI never writes into a conversation.
 
 ## The other apps
 

@@ -19,7 +19,7 @@ const TABS: { id: TabId; label: string; icon: string; sub: string }[] = [
   { id: 'chatting', label: 'Chatting', icon: 'message', sub: 'Enter to send, read receipts, link previews and suggestions under messages.' },
   { id: 'notifications', label: 'Notifications', icon: 'bell', sub: 'Pushes when Pocket Chat is not open, quiet hours and the morning summary.' },
   { id: 'apps', label: 'Connected apps', icon: 'layers', sub: 'Share from your Pocket apps and turn messages into tasks, events, notes, split costs, wishes and places.' },
-  { id: 'ai', label: 'AI', icon: 'sparkles', sub: 'Pocket AI in your conversations: @ai answers, catch-up summaries, reply ideas, translations.' },
+  { id: 'ai', label: 'AI', icon: 'sparkles', sub: 'Pocket AI helps only you: catch-up summaries, reply ideas, translations. It never writes into a conversation.' },
   { id: 'profile', label: 'Profile', icon: 'user', sub: 'Your name, email and password.' },
   { id: 'people', label: 'People', icon: 'users', sub: 'Everyone who has an account on this box: the people you can chat with.' },
   { id: 'tokens', label: 'API & shortcuts', icon: 'key', sub: 'Personal tokens for Siri Shortcuts, scripts and other tools.' },
@@ -188,17 +188,17 @@ function Notifications() {
 }
 
 const APPS: { slug: AppSlug; title: string; sub: string; port: string }[] = [
-  { slug: 'tasks', title: 'Pocket Tasks', sub: 'Make a task from a message (“can you pick up milk?”), share a task, and let @ai see what is due when you ask it.', port: '8184' },
-  { slug: 'calendar', title: 'Pocket Calendar', sub: 'Add a plan from a message to your calendar, share an event, and let @ai check when you are free.', port: '8190' },
+  { slug: 'tasks', title: 'Pocket Tasks', sub: 'Make a task from a message (“can you pick up milk?”), share a task, and share a task.', port: '8184' },
+  { slug: 'calendar', title: 'Pocket Calendar', sub: 'Add a plan from a message to your calendar, and share an event.', port: '8190' },
   { slug: 'notes', title: 'Pocket Notes', sub: 'Keep a message or a conversation’s summary as a note, and share a note.', port: '8182' },
   { slug: 'split', title: 'Pocket Split', sub: 'Split a cost someone mentions in one of your Split groups.', port: '8172' },
   { slug: 'wishlist', title: 'Pocket Wishlist', sub: 'Save a link someone sent to your wishlist, and share a gift idea.', port: '8198' },
   { slug: 'places', title: 'Pocket Places', sub: 'Share a restaurant or a sight, and save one a friend recommends.', port: '8236' },
   { slug: 'voice', title: 'Pocket Voice', sub: 'Voice messages written out by whisper on this server, so everyone can read them and search finds them.', port: '8237' },
-  { slug: 'kitchen', title: 'Pocket Kitchen', sub: 'Share a recipe with its ingredients, and let @ai answer “what’s for dinner?” from your meal plan.', port: '8176' },
-  { slug: 'travel', title: 'Pocket Travel', sub: 'Share a trip with its dates, and let @ai answer questions about your next trip.', port: '8174' },
-  { slug: 'parcels', title: 'Pocket Parcels', sub: 'Share where a delivery is, and let @ai answer “has my parcel arrived?”.', port: '8233' },
-  { slug: 'weather', title: 'Pocket Weather', sub: 'Share today’s weather, and let @ai answer “will it rain on Saturday?”.', port: '8239' },
+  { slug: 'kitchen', title: 'Pocket Kitchen', sub: 'Share a recipe with its ingredients.', port: '8176' },
+  { slug: 'travel', title: 'Pocket Travel', sub: 'Share a trip with its dates.', port: '8174' },
+  { slug: 'parcels', title: 'Pocket Parcels', sub: 'Share where a delivery is.', port: '8233' },
+  { slug: 'weather', title: 'Pocket Weather', sub: 'Share today’s weather.', port: '8239' },
   { slug: 'bookshelf', title: 'Pocket Bookshelf', sub: 'Recommend a book you read, with your rating.', port: '8171' },
   { slug: 'watch', title: 'Pocket Watch', sub: 'Recommend a film or a show you watched.', port: '8201' },
 ]
@@ -212,7 +212,7 @@ function Integrations() {
   const set = (k: string, v: string) => setF({ ...f, [k]: v } as SettingsT)
   return (
     <div className="stack loose">
-      <div className="callout info"><Icon name="info" size={15} /><div>These connections are yours alone: Chat uses them only when you share something, make something from a message, or ask @ai. Through <b>Pocket Core</b> Chat acts as you in your own Pocket apps with nothing to paste (switch it off for yourself in Pocket Core → Settings → Apps acting for me); <b>Direct</b> uses a URL and an API token you enter.{!coreOn && <CoreHint />}</div></div>
+      <div className="callout info"><Icon name="info" size={15} /><div>These connections are yours alone: Chat uses them only when you share something or make something from a message. Through <b>Pocket Core</b> Chat acts as you in your own Pocket apps with nothing to paste (switch it off for yourself in Pocket Core → Settings → Apps acting for me); <b>Direct</b> uses a URL and an API token you enter.{!coreOn && <CoreHint />}</div></div>
       {APPS.map(a => {
         const mode = f[`${a.slug}_mode`]
         const via = f[`${a.slug}_via`]
@@ -229,7 +229,7 @@ function Integrations() {
           </Section>
         )
       })}
-      <Section title="Other Pocket apps" icon="layers" sub="Chat offers your conversations to the rest of the box through Pocket Core: Pocket AI can read and summarise them and send a message when you ask (“tell the family I'm late”), Pocket Day writes the day's chats into your journal, Pocket Flows can post a reminder. Switched off until you allow them in Pocket Core → Links.">
+      <Section title="Other Pocket apps" icon="layers" sub="Chat offers your conversations to the rest of the box through Pocket Core: Pocket AI can read and summarise them for you (it never sends a message), Pocket Day writes the day's chats into your journal, Pocket Flows can post a reminder. Switched off until you allow them in Pocket Core → Links.">
         <dl className="set-dl">
           <div><dt>chat:read</dt><dd className="muted">The conversations you are in and their messages, what you have not read, where you were mentioned, your saved messages.</dd></div>
           <div><dt>chat:write</dt><dd className="muted">Post a message or a card to a conversation, a person or your own space; that app may change only the messages it sent.</dd></div>
@@ -249,8 +249,7 @@ function AITab() {
   const shown = !coreOn && f.ai_provider === 'pocket' ? 'openai' : (f.ai_provider || 'auto')
   return (
     <div className="stack loose">
-      <Section title="What the AI does" icon="sparkles" sub="Write @ai in a conversation and Pocket AI answers there for everyone to read, with the conversation as context. “Catch up” summarises what you missed; ✨ in the composer suggests replies; ⋯ → Translate; “Fill in with AI” reads a message for a task or an event. It is your AI: what you ask goes to your provider, and only when you ask.">
-        <SettingRow title="@ai may look in my apps" help="When you ask @ai about plans, the weather, dinner, deliveries or trips, it reads your calendar, tasks, weather, meal plan, parcels and trips (only the ones you connected) to answer. In a group everyone sees the answer."><Switch checked={f.ai_apps} onChange={v => setF({ ...f, ai_apps: v })} label="Look in my apps" /></SettingRow>
+      <Section title="What the AI does" icon="sparkles" sub="Pocket AI helps you and nobody else: “Catch up” summarises what you missed, ✨ in the composer suggests replies, ⋯ → Translate, and “Fill in with AI” reads a message for a task or an event. It never writes into a conversation. It is your AI: what you ask goes to your provider, and only when you ask.">
         <SettingRow title="Your language" help="Translations go into it; empty = English." stack><input value={f.language} onChange={e => setF({ ...f, language: e.target.value })} placeholder="e.g. Bosnian, German" /></SettingRow>
         {ai && (ai.ready ? <p className="muted small row" style={{ gap: 6 }}><Icon name="sparkles" size={13} />{ai.provider === 'pocket' ? 'Pocket AI' : 'Your OpenAI key'} is ready.</p>
           : <div className="callout info"><Icon name="info" size={15} /><div>No AI connected{ai.detail ? ` (${ai.detail})` : ''}.{!coreOn && <CoreHint />}</div></div>)}

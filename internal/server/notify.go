@@ -71,7 +71,6 @@ func (s *Server) notifyMembers(ctx context.Context, conv *store.Conversation, m 
 	for _, id := range store.ParseMentions(m.Mentions) {
 		mentioned[id] = true
 	}
-	askedBy := int64(num(m.Data, "asked_by"))
 	now := time.Now()
 	for _, ms := range states {
 		if (sender != nil && ms.UserID == sender.ID) || s.hub.online(ms.UserID) {
@@ -93,7 +92,7 @@ func (s *Server) notifyMembers(ctx context.Context, conv *store.Conversation, m 
 		if mode == "" || mode == "default" {
 			mode = st.NotifyMode
 		}
-		forMe := mentioned[ms.UserID] || conv.Kind == store.KindDirect || (m.Kind == store.MsgAI && askedBy == ms.UserID)
+		forMe := mentioned[ms.UserID] || conv.Kind == store.KindDirect
 		switch mode {
 		case "off":
 			continue

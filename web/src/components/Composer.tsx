@@ -79,7 +79,6 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ co
 
   const members = conv.members.filter(m => m.user_id !== user?.id)
   const candidates = mention ? [
-    ...(conv.ai ? [{ key: 'ai', label: 'Pocket AI', hint: 'ask a question', insert: 'ai' }] : []),
     ...(conv.kind === 'group' ? [{ key: 'all', label: 'Everyone', hint: 'tell all', insert: 'all' }] : []),
     ...members.map(m => ({ key: String(m.user_id), label: m.name || m.email, hint: m.email, insert: (m.name || m.email).split(/\s+/)[0] })),
   ].filter(c => !mention.q || c.label.toLowerCase().includes(mention.q.toLowerCase()) || c.insert.toLowerCase().startsWith(mention.q.toLowerCase())).slice(0, 6) : []
@@ -181,7 +180,6 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ co
     'sep' as const,
     { label: 'Poll', icon: 'poll', onSelect: onPoll },
     { label: 'To-do list', icon: 'check-square', onSelect: onTodo },
-    ...(conv.ai ? ['sep' as const, { label: 'Ask Pocket AI here', icon: 'sparkles', onSelect: () => { setText(t => (t.startsWith('@ai ') ? t : '@ai ' + t)); ta.current?.focus() } }] : []),
   ]
 
   return (
@@ -207,7 +205,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ co
       {mention && candidates.length > 0 && <div className="mention-pop" role="listbox">
         {candidates.map((c, i) => (
           <button key={c.key} type="button" role="option" aria-selected={i === mention.i % candidates.length} className={`mention-opt ${i === mention.i % candidates.length ? 'hl' : ''}`} onMouseDown={e => { e.preventDefault(); pickMention(c.insert) }}>
-            {c.key === 'ai' ? <span className="ai-ava sm"><Icon name="sparkles" size={12} /></span> : c.key === 'all' ? <span className="ai-ava sm app"><Icon name="users" size={12} /></span> : <Avatar name={c.label} email={c.hint} size={22} />}
+            {c.key === 'all' ? <span className="ai-ava sm app"><Icon name="users" size={12} /></span> : <Avatar name={c.label} email={c.hint} size={22} />}
             <b>{c.label}</b><span className="muted small">{c.hint}</span>
           </button>
         ))}
@@ -225,7 +223,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ co
           {plus && <Menu anchor={plus} items={plusItems} onClose={() => setPlus(null)} width={230} />}
           <input ref={fileIn} type="file" multiple hidden onChange={e => { addFiles(Array.from(e.target.files || [])); e.target.value = '' }} />
           <textarea ref={ta} rows={1} value={text} onChange={e => change(e.target.value)} onKeyDown={key} onPaste={paste} onBlur={() => window.setTimeout(() => setMention(null), 150)}
-            placeholder={editing ? 'Change your message' : conv.kind === 'self' ? 'A note to yourself…' : mobile ? 'Message' : `Message ${conv.name}${conv.ai ? ' — @ai to ask Pocket AI' : ''}`} aria-label="Message" />
+            placeholder={editing ? 'Change your message' : conv.kind === 'self' ? 'A note to yourself…' : mobile ? 'Message' : `Message ${conv.name}`} aria-label="Message" />
           {!editing && conv.kind !== 'self' && !text && <button type="button" className="btn ghost icon-only" aria-label="Reply ideas" title="Reply ideas from Pocket AI" onClick={getIdeas} disabled={ideasBusy}><Icon name="sparkles" size={18} className={ideasBusy ? 'pulse' : ''} /></button>}
           {text.trim() || ready.length || editing ? (
             <button type="button" className="send-btn" aria-label={editing ? 'Save' : 'Send'} title={editing ? 'Save (Enter)' : 'Send (Enter)'} onClick={send} disabled={!editing && !canSend}><Icon name={editing ? 'check' : 'send'} size={18} /></button>

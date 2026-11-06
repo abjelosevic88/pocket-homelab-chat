@@ -30,17 +30,17 @@ type pocketApp struct {
 }
 
 var (
-	appTasks     = pocketApp{"tasks", "Pocket Tasks", []string{"tasks:read", "tasks:write"}, "Turn a message into a task (\"can you pick up milk?\"), share a task as a card, and let @ai see what is on your list when you ask it"}
-	appCalendar  = pocketApp{"calendar", "Pocket Calendar", []string{"calendar:read", "calendar:write"}, "Add a plan from a message to your calendar (\"Saturday 7pm at Kafana\"), share an event as a card, and let @ai check when you are free"}
+	appTasks     = pocketApp{"tasks", "Pocket Tasks", []string{"tasks:read", "tasks:write"}, "Turn a message into a task (\"can you pick up milk?\"), and share a task as a card"}
+	appCalendar  = pocketApp{"calendar", "Pocket Calendar", []string{"calendar:read", "calendar:write"}, "Add a plan from a message to your calendar (\"Saturday 7pm at Kafana\"), and share an event as a card"}
 	appNotes     = pocketApp{"notes", "Pocket Notes", []string{"notes:read", "notes:write"}, "Keep a message or a whole conversation's summary as a note, and share a note as a card"}
 	appSplit     = pocketApp{"split", "Pocket Split", []string{"groups:read", "expenses:write"}, "Split a cost someone mentions (\"I paid 40 € for the pizza\") in one of your Split groups"}
 	appWishlist  = pocketApp{"wishlist", "Pocket Wishlist", []string{"wishes:read", "wishes:write"}, "Save a link someone sent to your wishlist, and share a wish as a gift idea"}
 	appPlaces    = pocketApp{"places", "Pocket Places", []string{"places:read", "places:write"}, "Share a restaurant or a sight as a card, and save one a friend recommends to your places"}
 	appVoice     = pocketApp{"voice", "Pocket Voice", []string{"voice:transcribe"}, "Write out voice messages on this server (whisper), so everyone can read them and search finds them"}
-	appKitchen   = pocketApp{"kitchen", "Pocket Kitchen", []string{"recipes:read", "plan:read"}, "Share a recipe as a card, and let @ai answer \"what's for dinner?\" from your meal plan"}
-	appTravel    = pocketApp{"travel", "Pocket Travel", []string{"trips:read"}, "Share a trip with its dates as a card, and let @ai answer questions about your next trip"}
-	appParcels   = pocketApp{"parcels", "Pocket Parcels", []string{"parcels:read"}, "Share where a delivery is, and let @ai answer \"has my parcel arrived?\""}
-	appWeather   = pocketApp{"weather", "Pocket Weather", []string{"weather:read"}, "Show the weather on a plan's day and let @ai answer \"will it rain on Saturday?\""}
+	appKitchen   = pocketApp{"kitchen", "Pocket Kitchen", []string{"recipes:read"}, "Share a recipe with its ingredients as a card"}
+	appTravel    = pocketApp{"travel", "Pocket Travel", []string{"trips:read"}, "Share a trip with its dates as a card"}
+	appParcels   = pocketApp{"parcels", "Pocket Parcels", []string{"parcels:read"}, "Share where a delivery is as a card"}
+	appWeather   = pocketApp{"weather", "Pocket Weather", []string{"weather:read"}, "Share today's weather as a card"}
 	appBookshelf = pocketApp{"bookshelf", "Pocket Bookshelf", []string{"books:read"}, "Recommend a book you read as a card, with your rating"}
 	appWatch     = pocketApp{"watch", "Pocket Watch", []string{"watching:read"}, "Recommend a film or a show you watched as a card"}
 	pocketApps   = []pocketApp{appTasks, appCalendar, appNotes, appSplit, appWishlist, appPlaces, appVoice, appKitchen, appTravel, appParcels, appWeather, appBookshelf, appWatch}

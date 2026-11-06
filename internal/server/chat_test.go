@@ -377,3 +377,19 @@ func TestExportHasOnlyYourConversations(t *testing.T) {
 		}
 	}
 }
+
+// Pocket AI never writes into a conversation: "@ai" is just text.
+func TestNoAIInConversations(t *testing.T) {
+	a := newApp(t, nil)
+	g := a.ok(a.alice, "POST", "/api/v1/conversations", map[string]any{"kind": "group", "title": "Family", "members": []any{a.ids["Bob"]}})
+	m := a.ok(a.alice, "POST", "/api/v1/conversations/"+id(g)+"/messages", map[string]any{"text": "@ai what's the weather on Saturday?"})
+	if l, _ := m["mentions"].([]any); len(l) != 0 {
+		t.Fatalf("@ai is a mention: %v", l)
+	}
+	time.Sleep(300 * time.Millisecond)
+	for _, x := range a.list(a.bob, "/api/v1/conversations/"+id(g)+"/messages") {
+		if str(x.(map[string]any), "kind") == "ai" {
+			t.Fatal("Pocket AI wrote into the conversation")
+		}
+	}
+}
