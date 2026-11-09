@@ -18,7 +18,7 @@ import (
 
 var linkOffers = []core.Offer{
 	{Scope: "chat:read", Name: "See your chats", Description: "Read your conversations and messages (only the ones you are in), what you have not read yet, where you were mentioned, your saved messages and a day's chat activity — for your journal, your briefing, search and Pocket AI."},
-	{Scope: "chat:write", Name: "Send messages for you", Description: "Post a message or a card into one of your conversations, to a person or to your own space \"Me\" (a reminder from Pocket Flows, an answer from Pocket AI you asked for). It may change or delete only the messages that app sent."},
+	{Scope: "chat:write", Name: "Send messages for you", Description: "Post a message, a card or a picture into one of your conversations, to a person or to your own space \"Me\" (a reminder from Pocket Flows, an answer from Pocket AI you asked for). It may change or delete only the messages that app sent."},
 }
 
 type linkRoute struct {
@@ -33,6 +33,7 @@ var linkRoutes = []linkRoute{
 	{"GET", regexp.MustCompile(`^/api/v1/conversations/\d+(/messages|/pinned|/catchup)?$`), "chat:read"},
 	{"POST", regexp.MustCompile(`^/api/v1/send$`), "chat:write"},
 	{"POST", regexp.MustCompile(`^/api/v1/conversations/\d+/messages$`), "chat:write"},
+	{"POST", regexp.MustCompile(`^/api/v1/conversations/\d+/upload$`), "chat:write"},
 	{"PUT DELETE", regexp.MustCompile(`^/api/v1/messages/\d+$`), "chat:write"},
 }
 
