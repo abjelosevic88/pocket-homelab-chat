@@ -843,3 +843,26 @@ func ParseMentions(m []string) []int64 {
 }
 
 var _ = sql.ErrNoRows
+
+// ImportedConversation finds a conversation the person is in that already
+// holds a message with one of these client ids (an earlier import of the
+// same chat), so importing a file again adds to it instead of a new one.
+func (s *Store) ImportedConversation(ctx context.Context, uid int64, clientIDs []string) int64 {
+	for len(clientIDs) > 0 {
+		n := min(len(clientIDs), 400)
+		chunk := clientIDs[:n]
+		clientIDs = clientIDs[n:]
+		args := []any{uid}
+		for _, c := range chunk {
+			args = append(args, c)
+		}
+		var cid int64
+		err := s.DB.QueryRowContext(ctx, `SELECT m.conversation_id FROM messages m
+			JOIN members mb ON mb.conversation_id = m.conversation_id AND mb.user_id = ?
+			WHERE m.client_id IN (?`+strings.Repeat(",?", len(chunk)-1)+`) ORDER BY m.conversation_id LIMIT 1`, args...).Scan(&cid)
+		if err == nil {
+			return cid
+		}
+	}
+	return 0
+}

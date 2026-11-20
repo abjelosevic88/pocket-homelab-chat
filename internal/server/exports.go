@@ -32,6 +32,14 @@ type exportDoc struct {
 	Exported      string               `json:"exported_at"`
 	Conversations []exportConversation `json:"conversations"`
 	Made          []store.Made         `json:"made"`
+	// Me is who exported it, so an import knows which messages are theirs.
+	Me *exportMe `json:"me,omitempty"`
+}
+
+type exportMe struct {
+	ID    int64  `json:"id"`
+	Email string `json:"email"`
+	Name  string `json:"name"`
 }
 
 type exportConversation struct {
@@ -60,6 +68,9 @@ func (s *Server) export(ctx context.Context, uid int64) exportDoc {
 		doc.Conversations = append(doc.Conversations, ec)
 	}
 	doc.Made, _ = s.store.MadeList(ctx, uid, 100000)
+	if u, err := s.store.GetUser(ctx, uid); err == nil {
+		doc.Me = &exportMe{ID: u.ID, Email: u.Email, Name: u.Name}
+	}
 	return doc
 }
 
@@ -324,7 +335,19 @@ func (s *Server) handleImportWhatsApp(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	key := func(wm waMessage) string {
+		h := sha1.Sum([]byte(wm.at.Format(time.RFC3339) + "|" + wm.name + "|" + wm.text + "|" + wm.file))
+		return "wa:" + hex.EncodeToString(h[:10])
+	}
 	cid, _ := strconv.ParseInt(r.FormValue("conversation"), 10, 64)
+	if cid == 0 {
+		// the same chat brought in before: add to it, not to a new group
+		keys := make([]string, 0, len(p.messages))
+		for _, wm := range p.messages {
+			keys = append(keys, key(wm))
+		}
+		cid = s.store.ImportedConversation(ctx, me.ID, keys)
+	}
 	if cid > 0 {
 		if _, err := s.store.Role(ctx, me.ID, cid); err != nil {
 			s.fail(w, err, "conversation")
@@ -350,9 +373,8 @@ func (s *Server) handleImportWhatsApp(w http.ResponseWriter, r *http.Request) {
 	}
 	added, dup, filesIn := 0, 0, 0
 	for _, wm := range p.messages {
-		h := sha1.Sum([]byte(wm.at.Format(time.RFC3339) + "|" + wm.name + "|" + wm.text + "|" + wm.file))
 		m := &store.Message{ConversationID: cid, Kind: store.MsgText, Body: clip(wm.text, maxText), Source: "import", SourceRef: "whatsapp",
-			ClientID: "wa:" + hex.EncodeToString(h[:10]), CreatedAt: wm.at.UTC().Format(time.RFC3339Nano), Data: map[string]any{"imported": "whatsapp"}}
+			ClientID: key(wm), CreatedAt: wm.at.UTC().Format(time.RFC3339Nano), Data: map[string]any{"imported": "whatsapp"}}
 		if id, ok := people[wm.name]; ok && isMember[id] {
 			m.UserID = id
 		} else {
@@ -385,8 +407,10 @@ func (s *Server) handleImportWhatsApp(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	s.systemLine(ctx, cid, fmt.Sprintf("%s brought %d %s from WhatsApp", me.Name, added, plural(added, "message", "messages")), nil)
-	s.toMembers(ctx, cid, "conversation", map[string]any{"id": cid})
+	if added > 0 {
+		s.systemLine(ctx, cid, fmt.Sprintf("%s brought %d %s from WhatsApp", me.Name, added, plural(added, "message", "messages")), nil)
+		s.toMembers(ctx, cid, "conversation", map[string]any{"id": cid})
+	}
 	writeJSON(w, http.StatusOK, map[string]any{"conversation_id": cid, "messages": added, "skipped": dup, "files": filesIn})
 }
 

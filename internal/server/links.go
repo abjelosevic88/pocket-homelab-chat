@@ -21,6 +21,18 @@ var linkOffers = []core.Offer{
 	{Scope: "chat:write", Name: "Send messages for you", Description: "Post a message, a card or a picture into one of your conversations, to a person or to your own space \"Me\" (a reminder from Pocket Flows, an answer from Pocket AI you asked for). It may change or delete only the messages that app sent."},
 }
 
+// portable is what Pocket Move may copy out and bring in for a person
+// (docs/move.md in pocket-homelab-core); Register adds move:export/import.
+var portable = &core.Portable{
+	Exports: []core.PortableExport{
+		{Path: "/api/v1/export.json", File: "chat.json", Kind: core.KindPocket, Title: "Every conversation you are in, with its messages"},
+	},
+	Imports: []core.PortableImport{
+		{Path: "/api/v1/import", Kind: core.KindPocket, ContentType: "application/json", Title: "Adds the conversations from another box as your own groups, messages as they were; conversations brought in before are added to, not doubled"},
+		{Path: "/api/v1/import/whatsapp", Kind: "whatsapp-txt", Form: "file", MaxBytes: 512 << 20, Title: "Adds a WhatsApp chat (the .txt or .zip from Export chat) as a group of your own; a chat brought in before is added to, not doubled"},
+	},
+}
+
 type linkRoute struct {
 	methods string
 	path    *regexp.Regexp
@@ -41,6 +53,9 @@ var errLinkScope = errors.New("outside the link's scope")
 
 // linkAllows reports whether a link token with these scopes may make this request.
 func linkAllows(scopes []string, r *http.Request) bool {
+	if portable.LinkAllows(scopes, r) {
+		return true
+	}
 	for _, lr := range linkRoutes {
 		if !strings.Contains(" "+lr.methods+" ", " "+r.Method+" ") || !lr.path.MatchString(r.URL.Path) {
 			continue

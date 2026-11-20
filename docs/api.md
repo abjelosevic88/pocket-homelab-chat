@@ -59,4 +59,6 @@ Events on the Pocket Core bus: `chat.message_sent` (for the sender), `chat.menti
 
 ## Box
 
-`GET /healthz`, `/readyz`, `/metrics`; `GET /export.json`; `POST /import/whatsapp` (multipart `file` .txt/.zip, `preview=1`, `people` = JSON name → user id, `conversation` or `title`); `GET /backup` (admin).
+`GET /healthz`, `/readyz`, `/metrics`; `GET /export.json`; `POST /import` (a Pocket Chat export as the body: each conversation comes in as a group of your own); `POST /import/whatsapp` (multipart `file` .txt/.zip, `preview=1`, `people` = JSON name → user id, `conversation` or `title`; without them a chat brought in before is added to); `GET /backup` (admin).
+
+Pocket Move can copy your chats out and bring them in: `GET /pocket/portable` describes `export.json` (link scope `move:export`), `POST /import` and `POST /import/whatsapp` (`move:import`). Imports only add; a second run of the same file adds nothing.

@@ -44,6 +44,7 @@ func (s *Server) Router() http.Handler {
 			r.Post("/conversations/{id}/upload", s.handleUpload)
 			r.Get("/files/{file}", s.handleFile)
 			r.Post("/import/whatsapp", s.handleImportWhatsApp)
+			r.Post("/import", s.handleImport)
 			r.Get("/export.json", s.handleExportJSON)
 			r.Get("/conversations/{id}/export.txt", s.handleExportText)
 			r.Get("/catchup", s.handleCatchupAll)
@@ -135,6 +136,7 @@ func (s *Server) Router() http.Handler {
 				r.Delete("/tokens/{id}", s.handleDeleteToken)
 
 				r.Get("/backup", s.handleBackup)
+				r.Get("/pocket/portable", portable.Handler())
 			})
 		})
 	})
